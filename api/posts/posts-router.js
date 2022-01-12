@@ -30,6 +30,7 @@ router.get('/:id'),(req,res)=>{
         res.status(500).json({message: 'The information could not be retrived'});
     })
 }
+//TODO WHEN I GET HOME:: TEST THESE ENDPOINTS ARE WORKING !
 
 //RETURN -- PSUED EXPORT SECTIONR
 module.exports = router;
