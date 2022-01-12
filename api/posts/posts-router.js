@@ -17,7 +17,7 @@ router.get('/',(req,res)=>{
 });
 
 //// GET SINGULAR POST -- by id
-router.get('/:id'),(req,res)=>{
+router.get('/:id',(req,res)=>{
     Post.findById(req.params.id)
     .then(post=>{
         if(post){
@@ -29,8 +29,28 @@ router.get('/:id'),(req,res)=>{
         console.error(err);
         res.status(500).json({message: 'The information could not be retrived'});
     })
-}
-//TODO WHEN I GET HOME:: TEST THESE ENDPOINTS ARE WORKING !
+});
+
+//// POST POST PASSES THE CORRECT INFO IN THE REQ BODY AND THEN RETURNS THE RIGHT OBJECT
+router.post('/',(req,res)=>{
+    const {title,contents} = req.body;
+    //this data must come before we create the object !
+   
+    if(!title || !contents){
+        res.status(400).json({message: 'Please provide title and contents for the post'})
+    } else {
+        Post.insert({title,contents})
+        .then(({id})=>{ 
+            return Post.findById(id); //we nest this here because the returned object of post with this id is expected
+        })
+        .then(post=>{
+            res.status(201).json(post)
+        }).catch(err=>{
+            console.error(err);
+            res.status(500).json({ message: "There was an error while saving the post to the database" })
+        })
+    }
+})
 
 //RETURN -- PSUED EXPORT SECTIONR
 module.exports = router;
