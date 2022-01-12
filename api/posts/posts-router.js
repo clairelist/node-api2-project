@@ -76,8 +76,22 @@ router.put('/:id', (req,res) => {
             res.status(500).json({ message: "The post information could not be modified", error:err });
         })
     }
-})
+});
 // ...basically I had it a bit backwards, LOL !
+
+router.delete('/:id', async (req,res) => {
+    try {
+        const post = await Post.findById(req.params.id);
+        if (!post) {
+            res.status(404).json({message: 'The post with the specified ID does not exist'});
+        } else {
+            await Post.remove(req.params.id);
+            res.json(post);
+        }
+    } catch (err) {
+        res.status(500).json({message: 'The post could not be removed', error:err});
+    }
+}); //try - catch block method here, for kicks !
 
 //RETURN -- PSUED EXPORT SECTIONR
 module.exports = router;
